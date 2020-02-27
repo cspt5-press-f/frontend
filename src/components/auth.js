@@ -1,7 +1,7 @@
 import axios from "axios";
 
-export const login = ({username, password}) => {
-    axios.post("https://lambda-mud-test.herokuapp.com/api/login/", {
+export const login = (baseUrl, {username, password}) => {
+    axios.post(`${baseUrl}/api/login/`, {
         username,
         password
     })
@@ -13,9 +13,9 @@ export const login = ({username, password}) => {
     })
 }
 
-export const register = ({username, password1, password2}) => {
+export const register = (baseUrl, {username, password1, password2}) => {
     console.log("registering", username,password1,password2)
-    axios.post("https://lambda-mud-test.herokuapp.com/api/registration/", {
+    axios.post(`${baseUrl}/api/registration/`, {
         username,
         password1,
         password2
