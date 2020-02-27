@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { addResponse } from "../actions"
+import { addResponse } from "../redux/actions"
 
 const Sidebar = ({responses}) => {
   //const [responses, setResponses] = useState(["hey","wassup"]);

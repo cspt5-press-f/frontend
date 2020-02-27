@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { login, register } from "./auth";
 import { connect } from "react-redux";
-import { addResponse } from "../actions";
+import { addResponse } from "../redux/actions";
 
 function MainScreen(props) {
     console.log("MainScreen props", props);
@@ -19,7 +19,7 @@ function MainScreen(props) {
   );
 
   const loginChangeHandler = e => {
-    console.log("login change", loginDetails);
+    //console.log("login change", loginDetails);
     
 
     setLoginDetails(
@@ -28,7 +28,7 @@ function MainScreen(props) {
   };
 
   const registerChangeHandler = e => {
-    console.log("reg change", registerDetails);
+    //console.log("reg change", registerDetails);
 
     setRegisterDetails(
       Object.assign({}, registerDetails, { [e.target.name]: e.target.value })
@@ -41,6 +41,7 @@ function MainScreen(props) {
   };
 
   const loginHandler = async (baseUrl, data) => {
+    console.log("login handler", data);
     props.addResponse(await login(baseUrl, data));
   };
 
@@ -62,6 +63,8 @@ function MainScreen(props) {
           name="base-url"
           value={baseUrl}
           style={{ width: "25vw" }}
+          onChange={urlChangeHandler}
+        
         />
       </form>
       <form>
