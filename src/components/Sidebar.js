@@ -7,7 +7,7 @@ const Sidebar = ({responses}) => {
   return (
     <div id="sidebar">
       <h1>Sidebar</h1>
-      {responses.map(response => <div>{response}</div>)}
+      {responses.map(response => <div>{response}<br /><br /></div>)}
     </div>
   );
 };
