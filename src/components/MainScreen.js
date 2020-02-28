@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { login, register } from "./auth";
 import { connect } from "react-redux";
 import { addResponse } from "../redux/actions";
+import Map from "./map";
+import MovementButtons from "./MovementButtons";
 
 function MainScreen(props) {
   const [loginDetails, setLoginDetails] = useState({
@@ -142,6 +144,9 @@ function MainScreen(props) {
           Register
         </button>
       </form>
+      <br /><br />
+      <Map />
+      <MovementButtons />
     </div>
   );
 }
