@@ -5,7 +5,11 @@ import { addResponse } from "../redux/actions";
 import Map from "./map";
 import MovementButtons from "./MovementButtons";
 
+import Game from "./Game";
+
 function MainScreen(props) {
+  
+
   const [loginDetails, setLoginDetails] = useState({
     username: "",
     password: ""
@@ -21,7 +25,6 @@ function MainScreen(props) {
 
   const loginChangeHandler = e => {
     //console.log("login change", loginDetails);
-    
 
     setLoginDetails(
       Object.assign({}, loginDetails, { [e.target.name]: e.target.value })
@@ -65,7 +68,6 @@ function MainScreen(props) {
           value={baseUrl}
           style={{ width: "25vw" }}
           onChange={urlChangeHandler}
-        
         />
       </form>
       <form>
@@ -144,11 +146,15 @@ function MainScreen(props) {
           Register
         </button>
       </form>
-      <br /><br />
+      <br />
+      <br />
       <Map />
       <MovementButtons />
+      <br />
+      <br />
+      <Game style={{border: "1px solid red;"}}/>
     </div>
   );
 }
 
-export default connect(null, {addResponse})(MainScreen);
+export default connect(null, { addResponse })(MainScreen);
