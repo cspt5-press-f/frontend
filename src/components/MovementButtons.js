@@ -1,12 +1,15 @@
 import React from 'react';
 import traverse from "./traverse";
 import { connect } from "react-redux";
-import { addResponse } from "../redux/actions";
+import { addResponse, updateLocation } from "../redux/actions";
 
 const MovementButtons = (props) => {
     const traverseHandler = (e) => {
-        const traverseReturn = traverse(e.target.name, [0,0]);
+        console.log("Current coords", props.coords);
+        const traverseReturn = traverse(e.target.name, props.coords);
+        const newCoords = traverseReturn.coord;
         props.addResponse(JSON.stringify(traverseReturn));
+        props.updateLocation(newCoords);
     }
     return (
     <div>
@@ -17,4 +20,9 @@ const MovementButtons = (props) => {
     </div>);
 };
 
-export default connect(null, {addResponse})(MovementButtons);
+const mapStateToProps = (state) => {
+    console.log("mapstatetoprops", state);
+    return {coords: state.movement.coords};
+}
+
+export default connect(mapStateToProps, {addResponse, updateLocation })(MovementButtons);
