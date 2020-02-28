@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { addResponse } from "../redux/actions";
 
 function MainScreen(props) {
-    console.log("MainScreen props", props);
   const [loginDetails, setLoginDetails] = useState({
     username: "",
     password: ""
