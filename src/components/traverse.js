@@ -1,6 +1,6 @@
 //  Assumes <x, y> vector
 
-fakeMap = [
+export const fakeMap = [
         {
             "coord": [0,1],
             "title": "Foyer", 
@@ -35,15 +35,17 @@ fakeMap = [
 
 
 function traverse(direction, currentPosition=[0,0]) {
-    dirVectors = {
+    const dirVectors = {
         "n": [0, 1],
         "e": [1, 0],
         "s": [0, -1],
         "w": [-1, 0]
     };
 
+    let currentRoom;
+
     // Check for valid currentPosition
-    for (i = 0; i < fakeMap.length; i++) {
+    for (let i = 0; i < fakeMap.length; i++) {
         if (JSON.stringify(fakeMap[i]['coord']) == JSON.stringify(currentPosition)){
             currentRoom = fakeMap[i]
         }
@@ -56,10 +58,10 @@ function traverse(direction, currentPosition=[0,0]) {
     }
     
     // Calculate move and find new room
-    movVector = dirVectors[direction];
-    newPos = [(currentPosition[0] + movVector[0]), (currentPosition[1] + movVector[1])];
+    let movVector = dirVectors[direction];
+    let newPos = [(currentPosition[0] + movVector[0]), (currentPosition[1] + movVector[1])];
 
-    for (i = 0; i < fakeMap.length; i++) {
+    for (let i = 0; i < fakeMap.length; i++) {
         if (JSON.stringify(fakeMap[i]['coord']) == JSON.stringify(newPos)){
             return fakeMap[i];
         }
