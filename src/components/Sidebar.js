@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { addResponse } from "../redux/actions"
 
 const Sidebar = ({responses}) => {
-  //const [responses, setResponses] = useState(["hey","wassup"]);
 
   return (
     <div id="sidebar">
