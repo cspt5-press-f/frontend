@@ -28,6 +28,7 @@ export const register = (baseUrl, {username, password1, password2}) => {
     })
     .catch((err)=>{
         console.log("Register response error", err);
+        return JSON.stringify(err.message, null, 2);
         return JSON.stringify({request: "Register", message: err.message}, null, 2);
     });
 }
