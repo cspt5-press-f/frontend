@@ -1,4 +1,4 @@
-import { ADD_RESPONSE } from "./actionTypes";
+import { ADD_RESPONSE, UPDATE_LOCATION } from "./actionTypes";
 
 export const addResponse = data => {
     console.log("addResponse action", data);
@@ -6,3 +6,10 @@ export const addResponse = data => {
     type: ADD_RESPONSE,
     payload: data
 })}
+
+export const updateLocation = location => {
+    return ({
+        type: UPDATE_LOCATION,
+        payload: location
+    })
+}
