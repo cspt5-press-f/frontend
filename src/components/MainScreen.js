@@ -16,7 +16,7 @@ function MainScreen(props) {
     password2: ""
   });
   const [baseUrl, setBaseUrl] = useState(
-    "https://lambda-mud-test.herokuapp.com"
+    "https://cspt5-f-mud-backend.herokuapp.com"
   );
 
   const loginChangeHandler = e => {
