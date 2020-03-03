@@ -4,17 +4,18 @@ import { addResponse, updateLocation } from '../redux/actions';
 import './map.css';
 import axios from 'axios';
 
-export const getMap = (baseUrl) => {
-    return axios.get(`${baseUrl}/api/map/`)
+export const getMap = baseUrl => {
+    return axios
+        .get(`${baseUrl}/api/map/`)
         .then(res => {
-            console.log("GET map response", res);
-            return {}
+            console.log('GET map response', res);
+            return {};
         })
         .catch(err => {
-            console.log("GET map error", err);
-            return {}
-        })
-}
+            console.log('GET map error', err);
+            return {};
+        });
+};
 
 const fakeMap = [
     {
@@ -46,31 +47,25 @@ const fakeMap = [
         title: 'Treasure Room',
         description: "ou've found the long-lost treasure chamber! Sadly, it has already been completely emptied by earlier adventurers. The only exit is to the south.",
         players: ['Self', 'The Queen']
-    },
-    {
-        coord:[3, 3],
-        title: "Secret Room",
-        description: "Good luck getting here",
-        players: []
     }
 ];
 
-const Map = (props) => {
+const Map = props => {
     const createMap = (mapJSON, playerCoords = [0, 0]) => {
         let table = [];
         let coordX = [];
         let coordY = [];
         fakeMap.forEach(room => {
-            coordX.push(room.coord[1])
-            coordY.push(room.coord[0])
-        })
+            coordX.push(room.coord[0]);
+            coordY.push(room.coord[1]);
+        });
         let maxX = Math.max(...coordX);
         let maxY = Math.max(...coordY);
-        console.log(coordX, maxX)
-        console.log(coordY, maxY)
-        for (let i = (maxY+1); i > -1; i--) {
+        console.log(coordX, maxX);
+        console.log(coordY, maxY);
+        for (let i = maxY; i > -1; i--) {
             let children = [];
-            for (let j = 0; j < (maxX); j++) {
+            for (let j = 0; j < maxX + 1; j++) {
                 /* display player as 'P' */
                 if (i === playerCoords[0] && j === playerCoords[1]) {
                     children.push(<td>P</td>);
@@ -101,7 +96,7 @@ const Map = (props) => {
             <table className='map'>{createMap(fakeMap, [props.coords[1], props.coords[0]])}</table>
         </div>
     );
-}
+};
 
 const mapStateToProps = state => ({
     coords: state.movement.coords
