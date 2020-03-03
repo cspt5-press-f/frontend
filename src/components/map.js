@@ -2,6 +2,19 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { addResponse, updateLocation } from '../redux/actions';
 import './map.css';
+import axios from 'axios';
+
+export const getMap = (baseUrl) => {
+    return axios.get(`${baseUrl}/api/map/`)
+        .then(res => {
+            console.log("GET map response", res);
+            return {}
+        })
+        .catch(err => {
+            console.log("GET map error", err);
+            return {}
+        })
+}
 
 const fakeMap = [
     {
@@ -33,15 +46,31 @@ const fakeMap = [
         title: 'Treasure Room',
         description: "ou've found the long-lost treasure chamber! Sadly, it has already been completely emptied by earlier adventurers. The only exit is to the south.",
         players: ['Self', 'The Queen']
+    },
+    {
+        coord:[3, 3],
+        title: "Secret Room",
+        description: "Good luck getting here",
+        players: []
     }
 ];
 
 const Map = (props) => {
     const createMap = (mapJSON, playerCoords = [0, 0]) => {
         let table = [];
-        for (let i = 2; i > -1; i--) {
+        let coordX = [];
+        let coordY = [];
+        fakeMap.forEach(room => {
+            coordX.push(room.coord[1])
+            coordY.push(room.coord[0])
+        })
+        let maxX = Math.max(...coordX);
+        let maxY = Math.max(...coordY);
+        console.log(coordX, maxX)
+        console.log(coordY, maxY)
+        for (let i = (maxY+1); i > -1; i--) {
             let children = [];
-            for (let j = 0; j < 3; j++) {
+            for (let j = 0; j < (maxX); j++) {
                 /* display player as 'P' */
                 if (i === playerCoords[0] && j === playerCoords[1]) {
                     children.push(<td>P</td>);
