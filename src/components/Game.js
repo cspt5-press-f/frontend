@@ -1,5 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { connect } from "react-redux";
+import store from "../redux/store";
 
 import Phaser from "phaser";
 import { IonPhaser } from "@ion-phaser/react";
@@ -12,9 +14,12 @@ import lamp from "../assets/LampStand.png";
 import fortress from "../assets/fortress.png";
 import wood from "../assets/rpg_gui_v1/woodBackground.png";
 
-const Game = () => {
+const token = localStorage.getItem("mud_token");
+
+const Game = ({ responses }) => {
   let history = useHistory();
   let homeLoop;
+  let responsesText;
 
   const phaserStuff = {
     initialize: true,
@@ -79,7 +84,7 @@ const Game = () => {
           homeLoop = this.sound.add("homeLoop");
           homeLoop.play({ loop: true, volume: 0.02 });
           //this.sound.setDecodedCallback(homeLoop, ()=>{}, this);
-
+          if (!token) {
           let buttonImage = this.add
             .image(
               this.cameras.main.centerX,
@@ -133,19 +138,50 @@ const Game = () => {
             .on("pointerout", () =>
               registerButton.setStyle({ fill: "#aaaaaa", font: "40px Arial" })
             );
+          }
 
-          //emitter.startFollow(this.helloWorld);
+          
         },
-        update: function() {}
+        update: function() {
+          // constantly hitting the redux store ends up being really bad for performance... the code below is an attempt at that
+          // responses = store.getState().responses.responses; 
+          // //console.log("responses",responses);
+          // if (responsesText) {
+          //   //console.log("responsesText exists")
+          //   if (responsesText.text != responses[responses.length - 1]) {
+          //     responsesText.setText(responses[responses.length - 1]);
+          //   }
+          // } else if (responses.length > 0) {
+          //   console.log("we did it");
+          //   responsesText = this.add
+          //     .text(
+          //       this.cameras.main.centerX,
+          //       this.cameras.main.centerY + 150,
+          //       responses[responses.length - 1],
+          //       {
+          //         font: "30px Arial",
+          //         fill: "black"
+          //       }
+          //     )
+          //     .setOrigin(0.5);
+          // }
+        }
       }
     }
   };
 
   return (
+    
     <>
+    {console.log("YOOO!!", responses)}
       <IonPhaser game={phaserStuff.game} initialize={phaserStuff.initialize} />
     </>
   );
 };
 
-export default Game;
+const mapStateToProps = state => {
+  const responses = state.responses;
+  return responses;
+};
+
+export default connect(mapStateToProps)(Game);

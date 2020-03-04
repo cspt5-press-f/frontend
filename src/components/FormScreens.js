@@ -4,9 +4,11 @@ import { connect } from "react-redux";
 import { addResponse } from "../redux/actions";
 import Map from "./map";
 import MovementButtons from "./MovementButtons";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, useHistory } from "react-router-dom";
+
 
 function FormScreens(props) {
+  const history = useHistory();
   const [loginDetails, setLoginDetails] = useState({
     username: "",
     password: ""
@@ -43,13 +45,15 @@ function FormScreens(props) {
 
   const loginHandler = async (baseUrl, data) => {
     console.log("login handler", data);
-    props.addResponse(await login(baseUrl, data));
+    await login(baseUrl, data);
+    history.push("/");
   };
 
   const registerHandler = async (baseUrl, data) => {
     console.log("register data", data);
 
-    props.addResponse(await register(baseUrl, data));
+    await register(baseUrl, data);
+    history.push("/");
   };
 
   return (

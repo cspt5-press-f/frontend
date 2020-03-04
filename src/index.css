@@ -24,7 +24,12 @@ code {
 #sidebar {
   grid-column-start: 2;
   height: 100vh;
-  border: black solid 1px;
+  background: "linear-gradient(to bottom, #1111117a, #00000000"
+}
+
+#gamePanel {
+  grid-column-start: 1;
+  height: 100vh;
 }
 
 #user-landing {
