@@ -20,7 +20,7 @@ function MainScreen(props) {
     password2: ""
   });
   const [baseUrl, setBaseUrl] = useState(
-    "https://lambda-mud-test.herokuapp.com"
+    "https://cspt5-f-mud-backend.herokuapp.com"
   );
 
   const loginChangeHandler = e => {
@@ -57,7 +57,7 @@ function MainScreen(props) {
 
   return (
     <div id="main-screen">
-      <form>
+      {/*<form>
         <h1>Base URL</h1>
         This will be the base url, and the login and registration will append
         "/api" to the requests.
@@ -69,7 +69,7 @@ function MainScreen(props) {
           style={{ width: "25vw" }}
           onChange={urlChangeHandler}
         />
-      </form>
+      </form>*/}
       <form>
         <h1>Login</h1>
         {`${baseUrl}/api/login/`}

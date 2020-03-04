@@ -52,7 +52,7 @@ const Game = () => {
           });
 
           homeLoop = this.sound.add("homeLoop");
-          homeLoop.play({ loop: true });
+          homeLoop.play({ loop: true, volume: 0.02 });
           //this.sound.setDecodedCallback(homeLoop, ()=>{}, this);
 
           this.helloWorld = this.add.text(
