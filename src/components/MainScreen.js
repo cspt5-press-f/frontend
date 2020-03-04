@@ -54,7 +54,7 @@ function MainScreen(props) {
 
   return (
     <div id="main-screen">
-      <form>
+      {/*<form>
         <h1>Base URL</h1>
         This will be the base url, and the login and registration will append
         "/api" to the requests.
@@ -67,7 +67,7 @@ function MainScreen(props) {
           onChange={urlChangeHandler}
         
         />
-      </form>
+      </form>*/}
       <form>
         <h1>Login</h1>
         {`${baseUrl}/api/login/`}
