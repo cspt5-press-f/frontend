@@ -1,7 +1,7 @@
 import { ADD_RESPONSE } from "../actions/actionTypes";
 
 const initialState = {
-  responses: ["yo", "hey"]
+  responses: []
 };
 
 export const responses = (state = initialState, action) => {
