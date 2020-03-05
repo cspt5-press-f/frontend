@@ -16,7 +16,7 @@ function MainScreen(props) {
     password2: ""
   });
   const [baseUrl, setBaseUrl] = useState(
-    "https://cspt5-f-mud-backend.herokuapp.com"
+    "http://127.0.0.1:8000"
   );
 
   const loginChangeHandler = e => {
@@ -145,7 +145,7 @@ function MainScreen(props) {
         </button>
       </form>
       <br /><br />
-      <Map />
+      <Map baseUrl={baseUrl}/>
       <MovementButtons />
     </div>
   );
