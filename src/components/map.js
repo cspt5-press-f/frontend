@@ -12,12 +12,18 @@ class Map extends React.Component {
             coordX: [],
             coordY: [],
             table: [],
-            playerCoords: [0, 0],
         }
     }
 
     componentDidMount() {
         this.getMap(this.props.baseUrl)
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.coords != this.props.coords) {
+            console.log('redrawing map!')
+            this.createMap()
+        }
     }
 
     getMap = (baseUrl) => {
@@ -38,15 +44,17 @@ class Map extends React.Component {
             });
     };
 
-    createMap = (playerCoords = [0, 0]) => {
+    createMap = () => {
         let table = [];
-        let maxX = Math.max(...this.state.coordX);
-        let maxY = Math.max(...this.state.coordY);
+        let maxX = 4;
+        let maxY = 4;
+        let shiftX = 0;
+        let shiftY = 0;
         for (let i = maxY; i > -1; i--) {
             let children = [];
             for (let j = 0; j < maxX + 1; j++) {
                 /* display player as 'P' */
-                if (i === playerCoords[0] && j === playerCoords[1]) {
+                if (i === this.props.coords[1] && j === this.props.coords[0]) {
                     children.push(<td>P</td>);
                     /* display 'O' if coord is in map */
                     /* display 'X' if coord is not in map */
@@ -70,11 +78,41 @@ class Map extends React.Component {
         this.setState({table: table})
     };
 
+    // createMap = (playerCoords = [0, 0]) => {
+    //     let table = [];
+    //     let maxX = Math.max(...this.state.coordX);
+    //     let maxY = Math.max(...this.state.coordY);
+    //     for (let i = maxY; i > -1; i--) {
+    //         let children = [];
+    //         for (let j = 0; j < maxX + 1; j++) {
+    //             /* display player as 'P' */
+    //             if (i === playerCoords[0] && j === playerCoords[1]) {
+    //                 children.push(<td>P</td>);
+    //                 /* display 'O' if coord is in map */
+    //                 /* display 'X' if coord is not in map */
+    //             } else {
+    //                 /* todo: write more efficient method to see if coords
+    //                 are in the map */
+    //                 let flag = 0;
+    //                 for (let idx = 0; idx < this.state.coordX.length; idx++) {
+    //                     if (j === this.state.coordX[idx] && i === this.state.coordY[idx]) {
+    //                         children.push(<td>O</td>);
+    //                         flag = 1;
+    //                     }
+    //                 }
+    //                 if (flag === 0) {
+    //                     children.push(<td>X</td>);
+    //                 }
+    //             }
+    //         }
+    //         table.push(<tr>{children}</tr>);
+    //     }
+    //     this.setState({table: table})
+    // };
+
     render() {
         return (
             <div id='map'>
-                <button onClick={() => this.getMap(this.props.baseUrl)}>Generate Map!</button>
-                <button onClick={() => console.log(this.state.x_coords, this.state.y_coords)}>Map Data</button>
                 <table className='map'>{this.state.table}</table>
             </div>
         );
