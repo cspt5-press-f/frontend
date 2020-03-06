@@ -34,7 +34,7 @@ function FormScreens(props) {
   const registerChangeHandler = e => {
     //console.log("reg change", registerDetails);
      
-           if (e.target.name === 'password2' && e.target.name === 'password1'){
+           /*if (e.target.name === 'password2' && e.target.name === 'password1'){
           
          document.getElementById('message').style.color = 'green';
     document.getElementById('message').innerHTML = 'matching'
@@ -42,12 +42,13 @@ function FormScreens(props) {
       else{
           document.getElementById('message').style.color = 'red';
     document.getElementById('message').innerHTML = 'not matching';
-      }
-    
+      }*/
+   
 
     setRegisterDetails(
       Object.assign({}, registerDetails, { [e.target.name]: e.target.value })
     );
+       
   };
  
   const urlChangeHandler = e => {
@@ -63,10 +64,17 @@ function FormScreens(props) {
 
   const registerHandler = async (baseUrl, data) => {
     console.log("register data", data);
+      if (registerDetails.password2 != registerDetails.password1){
+    
+    alert("Passwords don't match")
+}else{
+    
+
 
     await register(baseUrl, data);
     history.push("/");
-  };
+
+} };
 
   return (
     <div id="user-landing">
@@ -142,7 +150,7 @@ function FormScreens(props) {
             <button
               type="button"
               value="Submit"
-              onClick={() => registerHandler(baseUrl, registerDetails)}
+              onClick= {() => registerHandler(baseUrl, registerDetails)}
             >
               Register
             </button>
