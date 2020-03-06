@@ -1,7 +1,7 @@
 import React from "react";
 import traverse from "./traverse";
 import { connect } from "react-redux";
-import { addResponse, updateLocation } from "../redux/actions";
+import { addResponse, updateLocation, getInventory } from "../redux/actions";
 import axios from "axios";
 
 const MovementButtons = props => {
@@ -48,6 +48,7 @@ const MovementButtons = props => {
   const initHandler = async e => {
     const initReturn = await gameInit();
     props.addResponse(JSON.stringify(initReturn.data));
+    props.getInventory(initReturn.data.items)
   };
   return (
     <div>
@@ -77,6 +78,6 @@ const mapStateToProps = state => {
   return { coords: state.movement.coords };
 };
 
-export default connect(mapStateToProps, { addResponse, updateLocation })(
+export default connect(mapStateToProps, { addResponse, updateLocation, getInventory })(
   MovementButtons
 );

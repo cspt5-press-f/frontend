@@ -1,4 +1,4 @@
-import { ADD_RESPONSE, UPDATE_LOCATION } from "./actionTypes";
+import { ADD_RESPONSE, UPDATE_LOCATION, GET_INVENTORY } from "./actionTypes";
 
 export const addResponse = data => {
     console.log("addResponse action", data);
@@ -11,5 +11,12 @@ export const updateLocation = location => {
     return ({
         type: UPDATE_LOCATION,
         payload: location
+    })
+}
+
+export const getInventory = inventory => {
+    return ({
+        type: GET_INVENTORY,
+        payload: inventory
     })
 }

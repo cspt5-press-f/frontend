@@ -1,3 +1,5 @@
 export const ADD_RESPONSE = "ADD_RESPONSE";
 
+export const GET_INVENTORY = "GET_INVENTORY";
+
 export const UPDATE_LOCATION = "UPDATE_LOCATION";
