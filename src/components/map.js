@@ -1,78 +1,122 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addResponse, updateLocation } from '../redux/actions';
+import update from 'immutability-helper';
 import './map.css';
+import axios from 'axios';
 
-const fakeMap = [
-    {
-        coord: [0, 1],
-        title: 'Foyer',
-        description: 'Dim light filters in from the south. Dusty\npassages run north and east.',
-        players: ['Self']
-    },
-    {
-        coord: [0, 0],
-        title: 'Outside',
-        description: 'North of you, the cave mount beckons',
-        players: ['Self', 'ReadyPlayerOne', 'Sexy Lady']
-    },
-    {
-        coord: [0, 2],
-        title: 'Grand Overlook',
-        description: 'A steep cliff appears before you, falling into the darkness. Ahead to the north, a light flickers in the distance, but there is no way across the chasm.',
-        players: ['Self', 'A Panda']
-    },
-    {
-        coord: [1, 1],
-        title: 'Narrow Passage',
-        description: 'The narrow passage bends here from west to north. The smell of gold permeates the air',
-        players: ['Self', 'Great Spider']
-    },
-    {
-        coord: [1, 2],
-        title: 'Treasure Room',
-        description: "ou've found the long-lost treasure chamber! Sadly, it has already been completely emptied by earlier adventurers. The only exit is to the south.",
-        players: ['Self', 'The Queen']
+class Map extends React.Component {
+    constructor (props) {
+        super(props)
+
+        this.state = {
+            coordX: [],
+            coordY: [],
+            shiftX: 0,
+            shiftY: 0,
+            table: [],
+            mapBool: [
+                [false, false, false, false, false],
+                [false, false, false, false, false],
+                [false, false, false, false, false],
+                [false, false, false, false, false],
+                [false, false, false, false, false],
+            ]
+        }
     }
-];
 
-const Map = (props) => {
-    const createMap = (mapJSON, playerCoords = [0, 0]) => {
+    componentDidMount = async () => {
+        await this.createMap(this.props.coord)
+        await this.drawMap()
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.coords != this.props.coords) {
+            this.drawMap()
+        }
+    }
+
+    getMap = (baseUrl) => {
+        return axios
+            .get(`${baseUrl}/api/adv/map/`)
+            .then(res => {
+                // console.log('GET map response', res);
+                this.setState({
+                    coordX: res.data.x_coords,
+                    coordY: res.data.y_coords
+                })
+                this.createMap()
+                return res.data
+            })
+            .catch(err => {
+                // console.log('GET map error', err);
+                return err.message;
+            });
+    };
+
+    createMap = async () => {
+        let maxX = 4;
+        let maxY = 4;
+        for (let i = 0; i <= maxX; i++) {
+            for (let j = 0; j <= maxY; j++) {
+                let mapBool = await update(this.state.mapBool, {
+                    [i]: {
+                        [j]: {$set: await this.getCoord(this.props.baseUrl, [i+this.state.shiftX,j+this.state.shiftY])}
+                    }
+                })
+                await this.setState({mapBool: mapBool})
+            }
+        }
+    }
+
+    getCoord = (baseUrl, coord) => {
+        return axios
+            .post(`${baseUrl}/api/adv/coord`, coord)
+            .then(res => {
+                // console.log('POST coord response', res);
+                return res.data.coord_exist
+            })
+            .catch(err => {
+                // console.log('POST coord error', err);
+                return err.message
+            })
+    }
+
+    drawMap = () => {
         let table = [];
-        for (let i = 2; i > -1; i--) {
+        let maxX = 4;
+        let maxY = 4;
+        for (let i = maxY; i > -1; i--) {
             let children = [];
-            for (let j = 0; j < 3; j++) {
+            for (let j = 0; j < maxX + 1; j++) {
                 /* display player as 'P' */
-                if (i === playerCoords[0] && j === playerCoords[1]) {
+                if (i === this.props.coords[1] && j === this.props.coords[0]) {
                     children.push(<td>P</td>);
-                    /* display ' ' if coord is in map */
-                    /* display 'x' if coord is not in map */
+                    /* display 'O' if coord is in map */
+                    /* display 'X' if coord is not in map */
                 } else {
                     /* todo: write more efficient method to see if coords
                     are in the map */
-                    let flag = 0;
-                    for (let idx = 0; idx < mapJSON.length; idx++) {
-                        if (j === mapJSON[idx]['coord'][0] && i === mapJSON[idx]['coord'][1]) {
-                            children.push(<td>O</td>);
-                            flag = 1;
-                        }
-                    }
-                    if (flag === 0) {
+                    if (this.state.mapBool[j][i]) {
+                        children.push(<td>O</td>);
+                    } else {
                         children.push(<td>X</td>);
                     }
                 }
             }
             table.push(<tr>{children}</tr>);
         }
-        return table;
+        this.setState({table: table})
     };
 
-    return (
-        <div id='map'>
-            <table className='map'>{createMap(fakeMap, [props.coords[1], props.coords[0]])}</table>
-        </div>
-    );
-}
+    render() {
+        return (
+            <div id='map'>
+                <table className='map'><tbody>{this.state.table}</tbody></table>
+            </div>
+        );
+    }
+};
 
 const mapStateToProps = state => ({
     coords: state.movement.coords
