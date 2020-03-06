@@ -97,16 +97,6 @@ class Map extends React.Component {
                 } else {
                     /* todo: write more efficient method to see if coords
                     are in the map */
-                    // let flag = 0;
-                    // for (let idx = 0; idx < this.state.coordX.length; idx++) {
-                    //     if (j === this.state.coordX[idx] && i === this.state.coordY[idx]) {
-                    //         children.push(<td>O</td>);
-                    //         flag = 1;
-                    //     }
-                    // }
-                    // if (flag === 0) {
-                    //     children.push(<td>X</td>);
-                    // }
                     if (this.state.mapBool[j][i]) {
                         children.push(<td>O</td>);
                     } else {
@@ -122,7 +112,7 @@ class Map extends React.Component {
     render() {
         return (
             <div id='map'>
-                <table className='map'>{this.state.table}</table>
+                <table className='map'><tbody>{this.state.table}</tbody></table>
             </div>
         );
     }
