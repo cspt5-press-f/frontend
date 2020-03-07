@@ -18,6 +18,7 @@ function FormScreens(props) {
     password1: "",
     password2: ""
   });
+  
   const [baseUrl, setBaseUrl] = useState(
     "http://127.0.0.1:8000"
   );
@@ -32,12 +33,23 @@ function FormScreens(props) {
 
   const registerChangeHandler = e => {
     //console.log("reg change", registerDetails);
+     
+           if (e.target.name === 'password2' && e.target.name === 'password1'){
+          
+         document.getElementById('message').style.color = 'green';
+    document.getElementById('message').innerHTML = 'matching'
+      }
+      else{
+          document.getElementById('message').style.color = 'red';
+    document.getElementById('message').innerHTML = 'not matching';
+      }
+    
 
     setRegisterDetails(
       Object.assign({}, registerDetails, { [e.target.name]: e.target.value })
     );
   };
-
+ 
   const urlChangeHandler = e => {
     console.log("Base url changed to ", baseUrl);
     setBaseUrl(e.target.value);
@@ -125,6 +137,7 @@ function FormScreens(props) {
               onChange={registerChangeHandler}
               value={registerDetails.password2}
             />
+              <span id='message'></span>
             <br />
             <button
               type="button"
