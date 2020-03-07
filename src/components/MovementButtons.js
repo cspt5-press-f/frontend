@@ -29,9 +29,11 @@ const MovementButtons = props => {
         }
       )
       .then(res => {
+        console.log(res)
         return res;
       })
       .catch(err => {
+        console.log(err)
         return err.message;
       });
   };
@@ -48,7 +50,7 @@ const MovementButtons = props => {
   const initHandler = async e => {
     const initReturn = await gameInit();
     props.addResponse(JSON.stringify(initReturn.data));
-    props.getInventory(initReturn.data.items)
+    props.getInventory(initReturn.data.player_items)
   };
   return (
     <div>

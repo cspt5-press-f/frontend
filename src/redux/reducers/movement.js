@@ -1,4 +1,4 @@
-import { UPDATE_LOCATION } from "../actions/actionTypes";
+import { UPDATE_LOCATION, GET_INVENTORY } from "../actions/actionTypes";
 
 const initialState = {
   coords: [0,0],
@@ -19,8 +19,8 @@ export const movement = (state = initialState, action) => {
 export const getInventory = (state = initialState, action) => { 
   switch (action.type) {
     case GET_INVENTORY:
-        console.log("GET_INVENTORY",state, "action payload", action.payload)
-      return { ...state, items: action.payload}
+        console.log("GET_INVENTORY -> action payload:", action.payload)
+      return {...state, items: [...state.items, action.payload] };
     default:
       return state;
   }
