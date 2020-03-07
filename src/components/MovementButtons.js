@@ -41,8 +41,9 @@ const MovementButtons = props => {
     const traverseReturn = await moveRequest(e.target.name);
     console.log(traverseReturn);
     const newCoords = traverseReturn.data.coord;
+    const newMap = traverseReturn.data.map;
     props.addResponse(JSON.stringify(traverseReturn.data));
-    props.updateLocation(newCoords);
+    props.updateLocation(newCoords, newMap);
   };
 
   const initHandler = async e => {

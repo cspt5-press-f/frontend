@@ -6,8 +6,8 @@ import './map.css';
 import axios from 'axios';
 
 class Map extends React.Component {
-    constructor (props) {
-        super(props)
+    constructor(props) {
+        super(props);
 
         this.state = {
             coordX: [],
@@ -20,33 +20,33 @@ class Map extends React.Component {
                 [false, false, false, false, false],
                 [false, false, false, false, false],
                 [false, false, false, false, false],
-                [false, false, false, false, false],
+                [false, false, false, false, false]
             ]
-        }
+        };
     }
 
     componentDidMount = async () => {
-        await this.createMap(this.props.coord)
-        await this.drawMap()
-    }
+        await this.createMap(this.props.coord);
+        await this.drawMap();
+    };
 
     componentDidUpdate(prevProps) {
         if (prevProps.coords != this.props.coords) {
-            this.drawMap()
+            this.drawMap();
         }
     }
 
-    getMap = (baseUrl) => {
+    getMap = () => {
         return axios
-            .get(`${baseUrl}/api/adv/map/`)
+            .get(`https://cspt5-f-mud-backend.herokuapp.com/api/adv/map/`)
             .then(res => {
                 // console.log('GET map response', res);
                 this.setState({
                     coordX: res.data.x_coords,
                     coordY: res.data.y_coords
-                })
-                this.createMap()
-                return res.data
+                });
+                this.createMap();
+                return res.data;
             })
             .catch(err => {
                 // console.log('GET map error', err);
@@ -61,26 +61,35 @@ class Map extends React.Component {
             for (let j = 0; j <= maxY; j++) {
                 let mapBool = await update(this.state.mapBool, {
                     [i]: {
-                        [j]: {$set: await this.getCoord(this.props.baseUrl, [i+this.state.shiftX,j+this.state.shiftY])}
+                        [j]: { $set: await this.getCoord(this.props.baseUrl, [i + this.state.shiftX, j + this.state.shiftY]) }
                     }
-                })
-                await this.setState({mapBool: mapBool})
+                });
+                await this.setState({ mapBool: mapBool });
             }
         }
-    }
+    };
 
-    getCoord = (baseUrl, coord) => {
+    getCoord = (coord) => {
         return axios
-            .post(`${baseUrl}/api/adv/coord`, coord)
+            .post(
+                `https://cspt5-f-mud-backend.herokuapp.com/api/adv/coord`,
+                { coord: coord },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Token ${localStorage.getItem('mud_token')}`
+                    }
+                }
+            )
             .then(res => {
                 // console.log('POST coord response', res);
-                return res.data.coord_exist
+                return res.data.coord_exist;
             })
             .catch(err => {
                 // console.log('POST coord error', err);
-                return err.message
-            })
-    }
+                return err.message;
+            });
+    };
 
     drawMap = () => {
         let table = [];
@@ -106,17 +115,19 @@ class Map extends React.Component {
             }
             table.push(<tr>{children}</tr>);
         }
-        this.setState({table: table})
+        this.setState({ table: table });
     };
 
     render() {
         return (
             <div id='map'>
-                <table className='map'><tbody>{this.state.table}</tbody></table>
+                <table className='map'>
+                    <tbody>{this.state.table}</tbody>
+                </table>
             </div>
         );
     }
-};
+}
 
 const mapStateToProps = state => ({
     coords: state.movement.coords
