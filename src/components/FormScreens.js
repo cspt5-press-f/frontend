@@ -20,7 +20,7 @@ function FormScreens(props) {
   });
   
   const [baseUrl, setBaseUrl] = useState(
-    "https://cspt5-f-mud-backend.herokuapp.com"
+    "http://127.0.0.1:8000"
   );
 
   const loginChangeHandler = e => {
@@ -151,7 +151,7 @@ function FormScreens(props) {
       </Switch>
       <br />
       <br />
-      <Map />
+      <Map baseUrl={baseUrl}/>
       <MovementButtons />
       <br />
       <br />
