@@ -14,3 +14,6 @@ backgrounds from here: https://opengameart.org/content/fortress-backgroundstoryb
 
 Lampstand from here: https://opengameart.org/content/iron-torches
 License CC0
+
+Oracles portrait from here: https://opengameart.org/content/oracle-portrait
+License CC-BY-SA 3.0

@@ -14,10 +14,11 @@ import lamp from "../assets/LampStand.png";
 import fortress from "../assets/fortress.png";
 import wood from "../assets/rpg_gui_v1/woodBackground.png";
 import diamonds from "../assets/diamonds32x24x5.png";
+import portrait from "../assets/oracles_0.png";
 
 const token = localStorage.getItem("mud_token");
 
-const Game = ({ responses }) => {
+const Game = ({ responses, playerCoords, map }) => {
   let history = useHistory();
   let homeLoop;
   let responsesText;
@@ -43,7 +44,8 @@ const Game = ({ responses }) => {
           this.load.image("lamp", lamp);
           this.load.image("fortress", fortress);
           this.load.image("wood", wood);
-          this.load.audio("homeLoop", loopFile);
+          //this.load.audio("homeLoop", loopFile);
+          this.load.image("portrait", portrait);
           // Some files, like spritesheets, require an external link, otherwise you get a Data URI error... -_-'
           this.load.spritesheet(
             "diamonds",
@@ -59,28 +61,67 @@ const Game = ({ responses }) => {
 
           let soundController = s.add(this.sound, "mute");
           soundController.listen();*/
+
+          // !! Need to figure out how to get this fortress image to stretch based on the game's window
           this.add
             .image(0, 0, "fortress")
             .setOrigin(0)
             .setScale(1);
 
+          let group;
+          let fakeMap;
           if (token) {
             console.log("creating!");
-            var group = this.add.group({
-              key: "diamonds",
-              frame: [0, 1, 2, 3, 4],
-              frameQuantity: 20
-            });
-            Phaser.Actions.GridAlign(group.getChildren(), {
-              width: 10,
-              height: 10,
-              cellWidth: 32,
-              cellHeight: 32,
-              x: this.cameras.main.centerX,
-              y: this.cameras.main.centerY
-            });
-          }
+            let mapMaker = () => {
+              fakeMap = store.getState().movement.map;
+              console.log(fakeMap);
+              fakeMap[2][2] = "player";
+              let renderMap = fakeMap.map(row => {
+                return row.reverse().map(item => {
+                  if (item === "player") {
+                    return this.add
+                      .sprite(0, 0, "diamonds", [3])
+                      .setOrigin(0.5);
+                  } else if (item) {
+                    return this.add
+                      .sprite(0, 0, "diamonds", [0])
+                      .setOrigin(0.5);
+                  } else if (!item) {
+                    return this.add
+                      .sprite(0, 0, "diamonds", [1])
+                      .setOrigin(0.5);
+                  }
+                });
+              });
 
+              if (group) group.clear(); // if the map already exists, clear it before updating it
+
+              group = this.add.group();
+              group.addMultiple(renderMap.flat().reverse());
+              Phaser.Actions.GridAlign(group.getChildren(), {
+                width: 5,
+                height: 5,
+                cellWidth: 32,
+                cellHeight: 32,
+                x: this.cameras.main.centerX - 80, // these coords tell phaser where to place the first item, to center align we'll shift by 80 pixels... 32px*5 sprites = 160px
+                y: this.cameras.main.centerY - 80
+              });
+            };
+
+            store.subscribe(() => {
+              mapMaker();
+            });
+
+            let portraitImage = this.add
+              .image(0, this.game.canvas.height, "portrait")
+              .setScale(0.3)
+              .setOrigin(0.1,1)
+              .setFlipX(true)
+              .setAlpha(0.5);
+            console.log("portrait height", portraitImage.displayWidth, portraitImage.displayHeight);
+            console.log("game size", this)
+          }
+          //console.log("diamonds group center coords", group.x, group.y);
 
           if (!token) {
             let particles = this.add.particles("fire");
@@ -107,8 +148,8 @@ const Game = ({ responses }) => {
               y: lamp_vectors.y + 27
             });
 
-            homeLoop = this.sound.add("homeLoop");
-            homeLoop.play({ loop: true, volume: 0.02 });
+            /*homeLoop = this.sound.add("homeLoop");
+            homeLoop.play({ loop: true, volume: 0.02 });*/
             //this.sound.setDecodedCallback(homeLoop, ()=>{}, this);
 
             let buttonImage = this.add
@@ -167,6 +208,7 @@ const Game = ({ responses }) => {
           }
         },
         update: function() {
+          //console.log("updating!")
           // constantly hitting the redux store ends up being really bad for performance... the code below is an attempt at that
           // responses = store.getState().responses.responses;
           // //console.log("responses",responses);
@@ -204,7 +246,9 @@ const Game = ({ responses }) => {
 
 const mapStateToProps = state => {
   const responses = state.responses;
-  return responses;
+  const map = state.movement.map;
+  const playerCoords = state.movement.coords;
+  return { responses, map, playerCoords };
 };
 
 export default connect(mapStateToProps)(Game);

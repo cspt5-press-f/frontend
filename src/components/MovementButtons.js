@@ -9,6 +9,7 @@ const MovementButtons = props => {
     return axios
       .get("https://cspt5-f-mud-backend.herokuapp.com/api/adv/init/", {headers: {"Content-Type": "application/json",Authorization: `Token ${localStorage.getItem("mud_token")}`}})
       .then(res => {
+          console.log("Game init response", res);
         return res;
       })
       .catch(err => {
@@ -39,16 +40,20 @@ const MovementButtons = props => {
   const traverseHandler = async e => {
     console.log("Current coords", props.coords);
     const traverseReturn = await moveRequest(e.target.name);
-    console.log(traverseReturn);
-    const newCoords = traverseReturn.data.coord;
-    props.addResponse(JSON.stringify(traverseReturn.data));
-    props.updateLocation(newCoords);
+    console.log("traverseReturn", traverseReturn);
+    const moveResponse = traverseReturn.data;
+    props.addResponse(`Current Location: ${traverseReturn.data.title}\nDescription: ${traverseReturn.data.description}\nItems Available: ${traverseReturn.data.items}`);
+    props.updateLocation(moveResponse);
   };
 
   const initHandler = async e => {
     const initReturn = await gameInit();
-    props.addResponse(JSON.stringify(initReturn.data));
+    const initResponse = initReturn.data;
+    initResponse.coord = [0,0]; // Backend doesn't provide starting coords, so we start at [0,0]
+    props.updateLocation(initResponse);
+    props.addResponse('Game Initialized!');
   };
+
   return (
     <div>
       <button type="button" name="startGame" onClick={initHandler}>

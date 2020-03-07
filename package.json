@@ -10,6 +10,7 @@
     "axios": "^0.19.2",
     "dat.gui": "^0.7.6",
     "phaser": "^3.22.0",
+    "immutability-helper": "^3.0.1",
     "react": "^16.12.0",
     "react-app-rewired": "^2.1.5",
     "react-cookie": "^4.0.3",

@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addResponse, updateLocation } from '../redux/actions';
+import update from 'immutability-helper';
 import './map.css';
 import axios from 'axios';
 
@@ -11,20 +12,35 @@ class Map extends React.Component {
         this.state = {
             coordX: [],
             coordY: [],
+            shiftX: 0,
+            shiftY: 0,
             table: [],
-            playerCoords: [0, 0],
+            mapBool: [
+                [false, false, false, false, false],
+                [false, false, false, false, false],
+                [false, false, false, false, false],
+                [false, false, false, false, false],
+                [false, false, false, false, false],
+            ]
         }
     }
 
-    componentDidMount() {
-        this.getMap(this.props.baseUrl)
+    componentDidMount = async () => {
+        await this.createMap(this.props.coord)
+        await this.drawMap()
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.coords != this.props.coords) {
+            this.drawMap()
+        }
     }
 
     getMap = (baseUrl) => {
         return axios
             .get(`${baseUrl}/api/adv/map/`)
             .then(res => {
-                console.log('GET map response', res);
+                // console.log('GET map response', res);
                 this.setState({
                     coordX: res.data.x_coords,
                     coordY: res.data.y_coords
@@ -33,34 +49,57 @@ class Map extends React.Component {
                 return res.data
             })
             .catch(err => {
-                console.log('GET map error', err);
+                // console.log('GET map error', err);
                 return err.message;
             });
     };
 
-    createMap = (playerCoords = [0, 0]) => {
+    createMap = async () => {
+        let maxX = 4;
+        let maxY = 4;
+        for (let i = 0; i <= maxX; i++) {
+            for (let j = 0; j <= maxY; j++) {
+                let mapBool = await update(this.state.mapBool, {
+                    [i]: {
+                        [j]: {$set: await this.getCoord(this.props.baseUrl, [i+this.state.shiftX,j+this.state.shiftY])}
+                    }
+                })
+                await this.setState({mapBool: mapBool})
+            }
+        }
+    }
+
+    getCoord = (baseUrl, coord) => {
+        return axios
+            .post(`${baseUrl}/api/adv/coord`, coord)
+            .then(res => {
+                // console.log('POST coord response', res);
+                return res.data.coord_exist
+            })
+            .catch(err => {
+                // console.log('POST coord error', err);
+                return err.message
+            })
+    }
+
+    drawMap = () => {
         let table = [];
-        let maxX = Math.max(...this.state.coordX);
-        let maxY = Math.max(...this.state.coordY);
+        let maxX = 4;
+        let maxY = 4;
         for (let i = maxY; i > -1; i--) {
             let children = [];
             for (let j = 0; j < maxX + 1; j++) {
                 /* display player as 'P' */
-                if (i === playerCoords[0] && j === playerCoords[1]) {
+                if (i === this.props.coords[1] && j === this.props.coords[0]) {
                     children.push(<td>P</td>);
                     /* display 'O' if coord is in map */
                     /* display 'X' if coord is not in map */
                 } else {
                     /* todo: write more efficient method to see if coords
                     are in the map */
-                    let flag = 0;
-                    for (let idx = 0; idx < this.state.coordX.length; idx++) {
-                        if (j === this.state.coordX[idx] && i === this.state.coordY[idx]) {
-                            children.push(<td>O</td>);
-                            flag = 1;
-                        }
-                    }
-                    if (flag === 0) {
+                    if (this.state.mapBool[j][i]) {
+                        children.push(<td>O</td>);
+                    } else {
                         children.push(<td>X</td>);
                     }
                 }
@@ -73,9 +112,7 @@ class Map extends React.Component {
     render() {
         return (
             <div id='map'>
-                <button onClick={() => this.getMap(this.props.baseUrl)}>Generate Map!</button>
-                <button onClick={() => console.log(this.state.x_coords, this.state.y_coords)}>Map Data</button>
-                <table className='map'>{this.state.table}</table>
+                <table className='map'><tbody>{this.state.table}</tbody></table>
             </div>
         );
     }
