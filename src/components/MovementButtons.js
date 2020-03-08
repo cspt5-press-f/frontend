@@ -49,7 +49,9 @@ const MovementButtons = props => {
   const initHandler = async e => {
     const initReturn = await gameInit();
     const initResponse = initReturn.data;
+    console.log("!!! INIT RESPONSE", initResponse)
     initResponse.coord = [0,0]; // Backend doesn't provide starting coords, so we start at [0,0]
+    initResponse.map = []; // we'll manually initialize the map array as empty, then our phaser instance will conditionally wait until it has data bfore rendering the map...
     props.updateLocation(initResponse);
     props.addResponse('Game Initialized!');
   };
