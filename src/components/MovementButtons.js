@@ -45,6 +45,7 @@ const MovementButtons = props => {
     console.log("traverseReturn", traverseReturn);
     const moveResponse = traverseReturn.data;
     props.addResponse(`Current Location: ${traverseReturn.data.title}\nDescription: ${traverseReturn.data.description}\nItems Available: ${JSON.stringify(traverseReturn.data.room_items)}`);
+    props.getInventory(moveResponse.player_items);
     props.updateLocation(moveResponse);
   };
 

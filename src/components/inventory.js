@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { connect } from "react-redux";
-import { getInventory } from "../redux/actions";
+import { getInventory, addResponse } from "../redux/actions";
 
 class Inventory extends React.Component {
   constructor(props) {
@@ -27,12 +27,14 @@ class Inventory extends React.Component {
     const grabReturn = await this.postGrab();
     console.log("grabReturn", grabReturn);
     this.props.getInventory(grabReturn.data.player_items);
+    this.props.addresponse(grabReturn.data.message);
   };
 
   handlerDrop = async (itemId) => {
     const dropReturn = await this.postDrop(itemId);
     console.log("dropReturn", dropReturn, "itemId", itemId);
     this.props.getInventory(dropReturn.data.player_items);
+    this.props.addresponse(dropReturn.data.message);
   };
 
   postGrab = () => {
@@ -122,4 +124,4 @@ const mapStateToProps = state => {
   return { items };
 };
 
-export default connect(mapStateToProps, { getInventory })(Inventory);
+export default connect(mapStateToProps, { getInventory, addResponse })(Inventory);
