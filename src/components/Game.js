@@ -48,9 +48,9 @@ const Game = ({ responses, playerCoords, map }) => {
           this.load.image("portrait", portrait);
           // Some files, like spritesheets, require an external link, otherwise you get a Data URI error... -_-'
           this.load.spritesheet(
-            "diamonds",
-            "https://raw.githubusercontent.com/photonstorm/phaser3-examples/master/public/assets/sprites/diamonds32x24x5.png",
-            { frameWidth: 32, frameHeight: 24 }
+            "map",
+            "https://raw.githubusercontent.com/cspt5-press-f/frontend/staging/src/assets/map.png",
+            { frameWidth: 32, frameHeight: 32 }
           );
           //this.load.plugin("filter",Fire, true);
         },
@@ -79,26 +79,36 @@ const Game = ({ responses, playerCoords, map }) => {
               let renderMap = fakeMap.map(row => {
                 return row.reverse().map(item => {
                   if (item === "player") {
-                    return this.add
-                      .sprite(0, 0, "diamonds", [3])
-                      .setOrigin(0.5);
+                    // render the player sprite
+                    return this.add.sprite(0, 0, "map", [2]).setOrigin(0.5);
                   } else if (item) {
-                    return this.add
-                      .sprite(0, 0, "diamonds", [0])
-                      .setOrigin(0.5);
+                    // if there is a room, render open space
+                    return this.add.sprite(0, 0, "map", [0]).setOrigin(0.5);
                   } else if (!item) {
-                    return this.add
-                      .sprite(0, 0, "diamonds", [1])
-                      .setOrigin(0.5);
+                    // if there is no room, render a bush
+                    return this.add.sprite(0, 0, "map", [1]).setOrigin(0.5);
                   }
                 });
               });
 
-              if (group) group.clear(); // if the map already exists, clear it before updating it
+              if (group) {
+                group.removeAll(true);
+              } else {
+                group = this.add.container();
+                /*let mask = this.add.graphics(0, 0);
 
-              group = this.add.group();
-              group.addMultiple(renderMap.flat().reverse());
-              Phaser.Actions.GridAlign(group.getChildren(), {
+                //	Shapes drawn to the Graphics object must be filled.
+                mask.fillStyle(0xffffff);
+            
+                //	Here we'll draw a circle
+                mask.fillCircle(10, 10, 100);
+            
+                //	And apply it to the Sprite
+                group.setMask(mask);*/
+              } // if the map already exists, clear it before updating it
+
+              group.add(renderMap.flat().reverse());
+              Phaser.Actions.GridAlign(group.getAll(), {
                 width: 5,
                 height: 5,
                 cellWidth: 32,
@@ -109,17 +119,21 @@ const Game = ({ responses, playerCoords, map }) => {
             };
 
             store.subscribe(() => {
-              mapMaker();
+              if (store.getState().movement.map.length) mapMaker(); // only run the map making function if there's any map data in the store
             });
 
             let portraitImage = this.add
               .image(0, this.game.canvas.height, "portrait")
               .setScale(0.3)
-              .setOrigin(0.1,1)
+              .setOrigin(0.1, 1)
               .setFlipX(true)
               .setAlpha(0.5);
-            console.log("portrait height", portraitImage.displayWidth, portraitImage.displayHeight);
-            console.log("game size", this)
+            console.log(
+              "portrait height",
+              portraitImage.displayWidth,
+              portraitImage.displayHeight
+            );
+            console.log("game size", this);
           }
           //console.log("diamonds group center coords", group.x, group.y);
 

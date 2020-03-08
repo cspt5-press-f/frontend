@@ -145,7 +145,7 @@ function MainScreen(props) {
         </button>
       </form>
       <br /><br />
-      <Map baseUrl={baseUrl}/>
+      {/*<Map baseUrl={baseUrl}/>*/}
       <MovementButtons />
     </div>
   );
