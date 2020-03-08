@@ -21,7 +21,6 @@ const Sidebar = ({responses}) => {
 const mapStateToProps = state => {
     const responses = state.responses;
     return responses;
-
 }
 
 export default connect(mapStateToProps, { addResponse })(Sidebar);
