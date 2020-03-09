@@ -56,16 +56,18 @@ function FormScreens(props) {
   };
 
   const loginHandler = async (baseUrl, data) => {
-    console.log("login handler", data);
+    console.log("login handler", data, "baseUrl", baseUrl);
     await login(baseUrl, data);
     history.push("/");
+    window.location.reload(true);
   };
 
   const registerHandler = async (baseUrl, data) => {
-    console.log("register data", data);
+    console.log("register data", data, "baseUrl", baseUrl);
 
     await register(baseUrl, data);
     history.push("/");
+    window.location.reload(true);
   };
 
   return (
