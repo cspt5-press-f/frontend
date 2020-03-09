@@ -18,10 +18,11 @@ import portrait from "../assets/oracles_0.png";
 
 const token = localStorage.getItem("mud_token");
 
-const Game = ({ responses, playerCoords, map }) => {
+const Game = ({ responses, playerCoords, map, location }) => {
   let history = useHistory();
   //let homeLoop;
   //let responsesText;
+  console.log(history);
 
   const phaserStuff = {
     initialize: true,
