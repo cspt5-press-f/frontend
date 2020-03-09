@@ -16,7 +16,7 @@ function MainScreen(props) {
     password2: ""
   });
   const [baseUrl, setBaseUrl] = useState(
-    "http://127.0.0.1:8000"
+    "https://cspt5-f-mud-backend.herokuapp.com/"
   );
 
   const loginChangeHandler = e => {
