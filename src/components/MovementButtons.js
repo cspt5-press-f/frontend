@@ -1,7 +1,7 @@
 import React from "react";
 import traverse from "./traverse";
 import { connect } from "react-redux";
-import { addResponse, updateLocation } from "../redux/actions";
+import { addResponse, updateLocation, getInventory } from "../redux/actions";
 import axios from "axios";
 
 const MovementButtons = props => {
@@ -30,28 +30,30 @@ const MovementButtons = props => {
         }
       )
       .then(res => {
+        console.log("moveRequest", res)
         return res;
       })
       .catch(err => {
+        console.log("moveRequest error", err)
         return err.message;
       });
   };
 
   const traverseHandler = async e => {
-    console.log("Current coords", props.coords);
+    // console.log("Current coords", props.coords);
     const traverseReturn = await moveRequest(e.target.name);
-    console.log("traverseReturn", traverseReturn);
     const moveResponse = traverseReturn.data;
-    props.addResponse(`Current Location: ${traverseReturn.data.title}\nDescription: ${traverseReturn.data.description}\nItems Available: ${traverseReturn.data.items}`);
+    props.addResponse(`Current Location: ${traverseReturn.data.title}\nDescription: ${traverseReturn.data.description}\nItems Available: ${JSON.stringify(traverseReturn.data.room_items)}`);
+    props.getInventory(moveResponse.player_items);
     props.updateLocation(moveResponse);
   };
 
   const initHandler = async e => {
     const initReturn = await gameInit();
+    //props.addResponse(JSON.stringify(initReturn.data));
     const initResponse = initReturn.data;
     console.log("!!! INIT RESPONSE", initResponse)
-    initResponse.coord = [0,0]; // Backend doesn't provide starting coords, so we start at [0,0]
-    initResponse.map = []; // we'll manually initialize the map array as empty, then our phaser instance will conditionally wait until it has data bfore rendering the map...
+    props.getInventory(initResponse.player_items)
     props.updateLocation(initResponse);
     props.addResponse('Game Initialized!');
   };
@@ -84,6 +86,6 @@ const mapStateToProps = state => {
   return { coords: state.movement.coords };
 };
 
-export default connect(mapStateToProps, { addResponse, updateLocation })(
+export default connect(mapStateToProps, { addResponse, updateLocation, getInventory })(
   MovementButtons
 );

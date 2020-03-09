@@ -151,8 +151,8 @@ function FormScreens(props) {
       </Switch>
       <br />
       <br />
-      <Map baseUrl={baseUrl}/>
-      <MovementButtons />
+      {/*<Map baseUrl={baseUrl}/> //... Not sure if we need this anymore*/}
+
       <br />
       <br />
     </div>
