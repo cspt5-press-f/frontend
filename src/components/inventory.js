@@ -27,14 +27,14 @@ class Inventory extends React.Component {
     const grabReturn = await this.postGrab();
     console.log("grabReturn", grabReturn);
     this.props.getInventory(grabReturn.data.player_items);
-    this.props.addresponse(grabReturn.data.message);
+    this.props.addResponse(grabReturn.data.message || grabReturn.data.error);
   };
 
   handlerDrop = async (itemId) => {
     const dropReturn = await this.postDrop(itemId);
     console.log("dropReturn", dropReturn, "itemId", itemId);
     this.props.getInventory(dropReturn.data.player_items);
-    this.props.addresponse(dropReturn.data.message);
+    this.props.addResponse(dropReturn.data.message || dropReturn.data.message);
   };
 
   postGrab = () => {
@@ -102,7 +102,7 @@ class Inventory extends React.Component {
 
         <ul>
           {Object.keys(this.props.items).map(item => {
-              console.log("Item to map through", this.props.items[item]);
+              //console.log("Item to map through", this.props.items[item]);
             return (
               <li>
                 {Object.values(this.props.items[item])}

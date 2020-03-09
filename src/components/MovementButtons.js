@@ -30,19 +30,18 @@ const MovementButtons = props => {
         }
       )
       .then(res => {
-        console.log(res)
+        console.log("moveRequest", res)
         return res;
       })
       .catch(err => {
-        console.log(err)
+        console.log("moveRequest error", err)
         return err.message;
       });
   };
 
   const traverseHandler = async e => {
-    console.log("Current coords", props.coords);
+    // console.log("Current coords", props.coords);
     const traverseReturn = await moveRequest(e.target.name);
-    console.log("traverseReturn", traverseReturn);
     const moveResponse = traverseReturn.data;
     props.addResponse(`Current Location: ${traverseReturn.data.title}\nDescription: ${traverseReturn.data.description}\nItems Available: ${JSON.stringify(traverseReturn.data.room_items)}`);
     props.getInventory(moveResponse.player_items);

@@ -6,22 +6,22 @@ import store from "../redux/store";
 import Phaser from "phaser";
 import { IonPhaser } from "@ion-phaser/react";
 
-import * as dat from "dat.gui";
+//import * as dat from "dat.gui";
 
-import loopFile from "../assets/determination.mp3";
+//import loopFile from "../assets/determination.mp3";
 import flame from "../assets/flame1.png";
 import lamp from "../assets/LampStand.png";
 import fortress from "../assets/fortress.png";
 import wood from "../assets/rpg_gui_v1/woodBackground.png";
-import diamonds from "../assets/diamonds32x24x5.png";
+//import diamonds from "../assets/diamonds32x24x5.png";
 import portrait from "../assets/oracles_0.png";
 
 const token = localStorage.getItem("mud_token");
 
 const Game = ({ responses, playerCoords, map }) => {
   let history = useHistory();
-  let homeLoop;
-  let responsesText;
+  //let homeLoop;
+  //let responsesText;
 
   const phaserStuff = {
     initialize: true,
@@ -70,14 +70,24 @@ const Game = ({ responses, playerCoords, map }) => {
 
           let group;
           let fakeMap;
+          let flippedMap;
           if (token) {
-            console.log("creating!");
+            //console.log("creating!");
             let mapMaker = () => {
-              fakeMap = store.getState().movement.map;
-              console.log(fakeMap);
-              fakeMap[2][2] = "player";
-              let renderMap = fakeMap.map(row => {
-                return row.reverse().map(item => {
+              fakeMap = store.getState().movement.map; // get map from backend
+              fakeMap[2][2] = "player"; // add player to center of map
+              console.log("fakeMap", fakeMap);
+              flippedMap = fakeMap.reverse().flat()//.reverse(); // flatten array
+              /*
+              [[1,2,3]]
+
+
+              */
+
+
+              console.log("flippedMap", flippedMap)
+              let renderMap = flippedMap.map(item => {
+                //return row.map(item => {
                   if (item === "player") {
                     // render the player sprite
                     return this.add.sprite(0, 0, "map", [2]).setOrigin(0.5);
@@ -88,7 +98,7 @@ const Game = ({ responses, playerCoords, map }) => {
                     // if there is no room, render a bush
                     return this.add.sprite(0, 0, "map", [1]).setOrigin(0.5);
                   }
-                });
+                //});
               });
 
               if (group) {
@@ -106,8 +116,8 @@ const Game = ({ responses, playerCoords, map }) => {
                 //	And apply it to the Sprite
                 group.setMask(mask);*/
               } // if the map already exists, clear it before updating it
-
-              group.add(renderMap.flat().reverse());
+              
+              group.add(renderMap);
               Phaser.Actions.GridAlign(group.getAll(), {
                 width: 5,
                 height: 5,
@@ -128,12 +138,12 @@ const Game = ({ responses, playerCoords, map }) => {
               .setOrigin(0.1, 1)
               .setFlipX(true)
               .setAlpha(0.5);
-            console.log(
+            /*console.log(
               "portrait height",
               portraitImage.displayWidth,
               portraitImage.displayHeight
-            );
-            console.log("game size", this);
+            );*/
+            // console.log("game size", this);
           }
           //console.log("diamonds group center coords", group.x, group.y);
 
@@ -252,7 +262,6 @@ const Game = ({ responses, playerCoords, map }) => {
 
   return (
     <>
-      {console.log("YOOO!!", responses)}
       <IonPhaser game={phaserStuff.game} initialize={phaserStuff.initialize} />
     </>
   );
