@@ -20,7 +20,7 @@ function FormScreens(props) {
   });
   
   const [baseUrl, setBaseUrl] = useState(
-    "https://cspt5-f-mud-backend.herokuapp.com/"
+    "https://cspt5-f-mud-backend.herokuapp.com"
   );
 
   const loginChangeHandler = e => {
